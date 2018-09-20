@@ -1,0 +1,72 @@
+spring:
+  cloud:
+    stream:
+      bindings:
+        sleuth:
+          destination: ${sleuth_destination:sleuth-local}
+          binder: rabbit
+      binders:
+        rabbit:
+          type: rabbit
+          environment:
+            spring:
+              rabbitmq:
+                host: ${rabbitmq_host:11.11.136.141}
+                port: ${rabbitmq_port:5672}
+                username: ${rabbitmq_username:guest}
+                password: ${rabbitmq_password:guest}
+  profiles:
+    active: dev
+  application:
+    name: cnpc-dj-commonservice-zipkin
+#  datasource:
+#    url: jdbc:mysql://11.11.136.121:32341/zipkin
+##    url: jdbc:mysql://127.0.0.1:3306/zipkin
+#    driver-class-name: com.mysql.jdbc.Driver
+#    username: root
+#    password: YvhaLQbh4eKcTnO1
+##    password: 1234
+#    schema: classpath:zipkin.sql
+#    continue-on-error: true
+  sleuth:
+    enabled: false #当前程序不使用追踪
+    rxjava:
+      schedulers:
+        hook:
+          enabled: false
+
+zipkin:
+ storage:
+   type: elasticsearch
+   elasticsearch:
+     hosts: ${ZIPKIN_ELASTICSEARCH_HOSTS:http://openes-master-dev-dj-cnpc.apps.jtdjdev.cnpc}
+##elasticsearch config
+     cluster: elasticsearch
+     index: zipkin
+     index-shards: 5
+     index-replicas: 1
+#zipkin.storage.elasticsearch.hosts=10.20.1.11:9200,10.20.1.12:9200
+#zipkin.storage.elasticsearch.cluster=elasticsearch
+#zipkin.storage.elasticsearch.index=zipkin
+#zipkin.storage.elasticsearch.index-shards=5
+#zipkin.storage.elasticsearch.index-replicas=1
+
+#security:
+#  user:
+#    name: admin
+#    password: ${ZIPKIN_SERVER_PASSWORD:admin}
+#zipkin:
+#  storage:
+#    type: mysql
+---
+spring:
+  profiles: ocp
+server:
+  port: 8080
+
+---
+spring:
+  profiles: dev
+server:
+  port: 9411
+

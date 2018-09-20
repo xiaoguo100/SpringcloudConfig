@@ -1,0 +1,99 @@
+spring:
+  application:
+    name: cnpc-dj-commonservice-eureka
+  profiles:
+    active: local
+eureka:
+  server:
+    enable-self-preservation: true #开启自我保护
+    renewalPercentThreshold: 0.40 #心跳阀值
+#    eviction-interval-timer-in-ms: 4000
+  instance:
+    hostname: ${EUREKA_INSTANCE_HOSTNAME:localhost}
+    prefer-ip-address: false
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: ${EUREKA_PEER_LIST:http://${eureka.instance.hostname}:${server.port}/eureka/}
+
+---
+spring:
+  profiles: local
+server:
+  port: 8761
+eureka:
+  server:
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 4000
+  instance:
+    hostname: localhost
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+    serviceUrl:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+security:
+  user:
+    name: admin
+    password: ${EUREKA_PASSWORD:local-1234}
+
+---
+spring:
+  profiles: dev
+server:
+  port: 8761
+security:
+  user:
+    name: admin
+    password: ${EUREKA_PASSWORD:dev-1234}
+
+---
+spring:
+  profiles: sit
+server:
+  port: 8761
+security:
+  user:
+    name: admin
+    password: ${EUREKA_PASSWORD:sit-1234}
+
+---
+spring:
+  profiles: uat
+server:
+  port: 8761
+security:
+  user:
+    name: admin
+    password: ${EUREKA_PASSWORD:uat-1234}
+
+---
+spring:
+  profiles: stage
+server:
+  port: 8761
+security:
+  user:
+    name: admin
+    password: ${EUREKA_PASSWORD:stage-1234}
+
+---
+spring:
+  profiles: prod
+server:
+  port: 8761
+security:
+  user:
+    name: admin
+    password: ${EUREKA_PASSWORD:prod-1234}
+    
+---
+spring:
+  profiles: lea
+server:
+  port: 8761
+security:
+  user:
+    name: admin
+    password: ${EUREKA_PASSWORD:lea-1234}

@@ -1,0 +1,175 @@
+logging:
+  level:
+    org.springframework.cloud.netflix.zuul.filters.post.SendErrorFilter: error
+
+turbine:
+  cluster-name-expression: new String("default")
+  combine-host-port: true
+  app-config: ${TURBINE_APP_CONFIG:CNPC-DJ-GATEWAY-PARTY_BUILDING}
+
+spring:
+  application:
+    name: cnpc-dj-commonservice-monitor
+  profiles:
+    active: default
+  rabbitmq:
+    host: ${rabbitmq_host:localhost}
+    port: ${rabbitmq_port:5672}
+    username: ${rabbitmq_username:guest}
+    password: ${rabbitmq_password:guest}
+    listener:
+      simple:
+        concurrency: 2
+        max-concurrency: 2    
+  boot:
+    admin:
+      routes:
+        endpoints: env,metrics,trace,dump,jolokia,info,configprops,trace,logfile,refresh,flyway,liquibase,heapdump,loggers,auditevents,hystrix.stream,turbine.stream
+      turbine:
+        clusters: default
+        location: cnpc-dj-commonservice-monitor
+
+security:
+  user:
+    name: admin
+    password: ${MONITOR_SERVER_PASSWORD:admin}
+
+---
+spring:
+  profiles: default
+server:
+  port: 8040
+eureka:
+  instance:
+    prefer-ip-address: true
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}
+  client:
+    service-url:
+      defaultZone: ${EUREKA_URL_LIST:http://127.0.0.1:8761/eureka/}
+
+---
+spring:
+  profiles: local
+server:
+  port: 8040
+eureka:
+  instance:
+    prefer-ip-address: true
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}
+  client:
+    service-url:
+      defaultZone: http://user:${REGISTRY_SERVER_PASSWORD:password}@${SPRING_CLOUD_EUREKA_URI:127.0.0.1:8761}/eureka/
+
+
+---
+spring:
+  profiles: dev
+server:
+  port: 8040
+eureka:
+  server:
+    user: admin
+    password: dev-1234
+  instance:
+    prefer-ip-address: true
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}
+  client:
+    service-url:
+      defaultZone: http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha1-dev-dev-dj-cnpc.apps.jtdjdev.cnpc/eureka,http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha2-dev-dev-dj-cnpc.apps.jtdjdev.cnpc/eureka,http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha3-dev-dev-dj-cnpc.apps.jtdjdev.cnpc/eureka
+
+---
+spring:
+  profiles: sit
+server:
+  port: 8040
+eureka:
+  server:
+    user: admin
+    password: sit-1234
+  instance:
+    prefer-ip-address: true
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}
+  client:
+    service-url:
+      defaultZone: http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha1-dev-sit-dj-cnpc.apps.jtdjdev.cnpc/eureka,http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha2-dev-sit-dj-cnpc.apps.jtdjdev.cnpc/eureka,http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha3-dev-sit-dj-cnpc.apps.jtdjdev.cnpc/eureka
+
+
+---
+spring:
+  profiles: uat
+server:
+  port: 8040
+eureka:
+  server:
+    user: admin
+    password: uat-1234
+  instance:
+    prefer-ip-address: true
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}
+  client:
+    service-url:
+      defaultZone: http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha1-uat-uat-dj-cnpc.apps.jtdjdev.cnpc/eureka,http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha2-uat-uat-dj-cnpc.apps.jtdjdev.cnpc/eureka,http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha3-uat-uat-dj-cnpc.apps.jtdjdev.cnpc/eureka
+
+---
+spring:
+  profiles: stage
+server:
+  port: 8040
+eureka:
+  server:
+    user: admin
+    password: stage-1234
+  instance:
+    prefer-ip-address: true
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}
+  client:
+    service-url:
+      defaultZone: http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha1-stage-dj-cnpc.apps.jtdjdev.cnpc/eureka,http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha2-stage-dj-cnpc.apps.jtdjdev.cnpc/eureka,http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha3-stage-dj-cnpc.apps.jtdjdev.cnpc/eureka
+      
+---
+spring:
+  profiles: prod
+server:
+  port: 8040
+eureka:
+  server:
+    user: admin
+    password: prd-1234
+  instance:
+    prefer-ip-address: true
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}
+  client:
+    service-url:
+      defaultZone: http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha-1-prd-dj-cnpc.apps.jtdjprd.cnpc/eureka,http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha-2-prd-dj-cnpc.apps.jtdjprd.cnpc/eureka,http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha-3-prd-dj-cnpc.apps.jtdjprd.cnpc/eureka      
+
+---
+spring:
+  profiles: lea
+server:
+  port: 8040
+eureka:
+  server:
+    user: admin
+    password: lea-1234
+  instance:
+    prefer-ip-address: true
+    metadata-map:
+      user.name: ${security.user.name}
+      user.password: ${security.user.password}
+  client:
+    service-url:
+      defaultZone: http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha-1-lea-dj-cnpc.apps.jtdjlea.cnpc/eureka,http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha-2-lea-dj-cnpc.apps.jtdjlea.cnpc/eureka,http://${eureka.server.user}:${eureka.server.password}@cnpc-dj-commonservice-eureka-ha-3-lea-dj-cnpc.apps.jtdjlea.cnpc/eureka

@@ -1,0 +1,42 @@
+spring:
+  application:
+    name: CNPC-DJ-COMMONSEERVICE-CONFIG-SERVER
+  cloud:
+    config:
+      server:
+        git:
+          uri: ${SPRING_CLOUD_CONFIG_SERVER_GIT_URI:http://11.11.136.131/cnpc-dj/cnpc-dj-basic-config-repository.git}
+          username: ${SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME:git-common}
+          password: ${SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD:12345678}
+    bus:
+      trace:
+        enabled: true
+  profiles:
+    active: dev
+
+  rabbitmq:
+      host: ${rabbitmq_host:11.11.136.141} 
+      port: ${rabbitmq_port:5672} 
+      username: ${rabbitmq_username:guest}
+      password: ${rabbitmq_password:guest}
+      listener:
+        simple:
+          concurrency: 2
+          max-concurrency: 2
+
+security:
+  user:
+    name: user
+    password: password
+
+---
+spring:
+  profiles: dev
+server:
+  port: 8762
+
+---
+spring:
+  profiles: ocp
+server:
+  port: 8080

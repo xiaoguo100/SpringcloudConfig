@@ -1,0 +1,22 @@
+# compile files
+*.class
+*.jar
+*.war
+*.ear
+target
+
+# eclipse
+.classpath
+.project
+.settings/
+
+# idea
+.idea/
+*.iml
+*.ipr
+*.iws
+out
+
+# log file
+*.log
+*.log.*
